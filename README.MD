@@ -1,4 +1,4 @@
-# 🧩 HAProxy Active/Active Cluster POC
+# 🧩 HAProxy Active/Active Cluster Setup
 
 This project demonstrates a **highly available, active/active HAProxy cluster** setup with **Keepalived** for VIP management and **L4/L7 load balancing**.
 It includes scripts and configurations for deploying, testing, and managing the cluster.
