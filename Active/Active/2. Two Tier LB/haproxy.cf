@@ -1,0 +1,43 @@
+global
+    log stdout format raw local0
+    maxconn 4000
+    stats socket /var/run/haproxy.sock mode 660 level admin
+    daemon
+
+defaults
+    mode http
+    log global
+    option httplog
+    option dontlognull
+    option forwardfor except 127.0.0.1
+    timeout connect 5s
+    timeout client 30s
+    timeout server 30s
+    retries 3
+
+# --- STATS DASHBOARD ---
+frontend stats
+    bind *:8404
+    mode http
+    stats enable
+    stats uri /
+    stats realm HAProxy\ Stats
+    stats auth admin:admin123
+    stats refresh 10s
+
+# --- FRONTEND FOR WEB TRAFFIC ---
+frontend http_in
+    bind *:80
+    mode http
+    default_backend demo_backend
+
+# --- BACKEND SERVERS ---
+backend demo_backend
+    mode http
+    balance roundrobin
+    option httpchk GET /
+    http-check expect status 200
+
+    server web1 192.168.84.90:4000 check
+    server web2 192.168.84.92:4000 check
+    server web3 192.168.84.93:4000 check
